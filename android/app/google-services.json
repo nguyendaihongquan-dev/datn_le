@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "1002297328032",
+    "firebase_url": "https://fir-111-6ccb6-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "fir-111-6ccb6",
+    "storage_bucket": "fir-111-6ccb6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1002297328032:android:815d8b73e6d5b2f9c164c5",
+        "android_client_info": {
+          "package_name": "com.example.pear_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJx82Ko_pVSvuusxmkZbrpdis3cdGsuz4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
