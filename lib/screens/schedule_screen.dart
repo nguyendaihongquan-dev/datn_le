@@ -26,9 +26,9 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
 
   Future<void> _initData() async {
     DatabaseReference latFirebase =
-        FirebaseDatabase.instance.ref('/firealarm').child('temp');
+        FirebaseDatabase.instance.ref('/location/bus_1').child('lat');
     DatabaseReference longFirebase =
-        FirebaseDatabase.instance.ref('/firealarm').child('humi');
+        FirebaseDatabase.instance.ref('/location/bus_1').child('long');
 
     latFirebase.onValue.listen((event) {
       var data = event.snapshot.value;
