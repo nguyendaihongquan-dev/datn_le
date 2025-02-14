@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pear_app/res/images/app_images.dart';
 
 class MessageBubble extends StatelessWidget {
   final bool isFirstInSequence;
@@ -35,9 +36,7 @@ class MessageBubble extends StatelessWidget {
             // Align user image to the right, if the message is from me.
             right: isMe ? 0 : null,
             child: CircleAvatar(
-              backgroundImage: NetworkImage(
-                userImage!,
-              ),
+              backgroundImage: const AssetImage(AppImages.man),
               backgroundColor: theme.colorScheme.primary.withAlpha(180),
               radius: 23,
             ),
