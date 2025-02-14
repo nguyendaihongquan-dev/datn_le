@@ -1,41 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:pear_app/model/notify_model.dart';
-import 'package:pear_app/network/api/api_response.dart';
-import 'package:pear_app/network/api_request.dart';
 import 'package:pear_app/theme/app_colors.dart';
 import 'create_notify_screen.dart';
 import 'detail_notify_screen.dart';
 
-class NotificationTeacherScreen extends StatefulWidget {
-  const NotificationTeacherScreen({super.key});
+class NotificationAdminScreen extends StatefulWidget {
+  const NotificationAdminScreen({super.key});
 
   @override
-  State<NotificationTeacherScreen> createState() =>
-      _NotificationTeacherScreenState();
+  State<NotificationAdminScreen> createState() => _NotificationAdminScreenState();
 }
 
-class _NotificationTeacherScreenState extends State<NotificationTeacherScreen>
+class _NotificationAdminScreenState extends State<NotificationAdminScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  List<NotifyModel> listNoti = [];
-  Future<void> getList() async {
-    ApiResponse res = await ApiRequest.getNoti();
-    if (res.code == 200) {
-      for (var e in res.data) {
-        listNoti.add(
-          NotifyModel.fromJson(e),
-        );
-      }
-      setState(() {});
-    } else {
-      print("");
-    }
-  }
 
   @override
   void initState() {
-    getList();
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
   }
@@ -66,43 +46,31 @@ class _NotificationTeacherScreenState extends State<NotificationTeacherScreen>
                 Positioned(
                   bottom: 8,
                   right: 16,
-                  child: InkWell(
-                    onTap: () async {
-                      final results = await Navigator.push(
+                  child:  InkWell(
+                    onTap: (){
+                      Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const CreateNotifyScreen(),
+                          builder: (context) =>  const CreateNotifyScreen(),
                         ),
                       );
-                      if (results == true) {
-                        getList();
-                      }
                     },
                     child: Container(
-                      padding: const EdgeInsets.all(14),
+                      padding: EdgeInsets.all(14),
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        color: const Color(0xff1F92F1),
+                          borderRadius: BorderRadius.circular(12),
+                          color: Color(0xff1F92F1)
                       ),
-                      child: const Row(
+                      child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(
-                            Icons.add_circle,
-                            size: 20,
-                            color: Colors.white,
-                          ),
-                          SizedBox(
-                            width: 4,
-                          ),
-                          Text("Tạo thông báo",
-                              style:
-                                  TextStyle(fontSize: 14, color: Colors.white))
+                          Icon(Icons.add_circle,size: 20,color: Colors.white,),
+                          SizedBox(width: 4,),
+                          Text("Tạo thông báo", style: TextStyle(fontSize: 14, color: Colors.white))
                         ],
                       ),
                     ),
-                  ),
-                )
+                  ),)
               ],
             ),
           ),
@@ -122,16 +90,16 @@ class _NotificationTeacherScreenState extends State<NotificationTeacherScreen>
         indicatorColor: AppColors.primary,
         indicatorWeight: 3,
         labelStyle: TextStyle(
-          fontSize: 16, // Updated tab text size
+          fontSize: 16,  // Updated tab text size
           fontWeight: FontWeight.w500,
         ),
         unselectedLabelStyle: TextStyle(
-          fontSize: 16, // Updated tab text size for unselected tabs
+          fontSize: 16,  // Updated tab text size for unselected tabs
           fontWeight: FontWeight.w400,
         ),
         tabs: [
-          Tab(text: 'Thông báo đến'),
           Tab(text: 'Thông báo đã gửi'),
+          Tab(text: 'Phản ánh'),
         ],
       ),
     );
@@ -139,20 +107,32 @@ class _NotificationTeacherScreenState extends State<NotificationTeacherScreen>
 
   Widget _buildNotificationList() {
     return ListView(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16),
       children: [
-        ...listNoti.map(
-          (e) {
-            return _buildNotificationCard(
-              sender: 'Admin',
-              title: '[${e.title}]',
-              content: e.message ?? "",
-              time: DateFormat("HH:mm dd/MM/yyyy").format(
-                DateTime.parse(e.createdAt ?? ""),
-              ),
-            );
-          },
-        ).toList(),
+        _buildNotificationCard(
+          sender: 'Admin',
+          title: '[Cập nhật TKB đưa đón tháng 10]',
+          content: 'Đã có thời khóa biểu đưa đón từ ngày 01/10 - 15/10/2024',
+          time: '08:00 10/04/2023',
+        ),
+        _buildNotificationCard(
+          sender: 'Admin',
+          title: '[Thay đổi TBK đột xuất]',
+          content: 'Thay đổi TKB do bão Ya-Gi',
+          time: '08:00 10/04/2023',
+        ),
+        _buildNotificationCard(
+          sender: 'Admin',
+          title: '[Thay đổi tài xế đưa đón ngày 15/...',
+          content: 'Do tài xế xin nghỉ ngày 15/04/2024 nên thay đổi tài xế xe đưa đón ngày 15 là...',
+          time: '08:00 10/04/2023',
+        ),
+        _buildNotificationCard(
+          sender: 'Admin HVO',
+          title: '[THÔNG BÁO NGHỈ HỌC NGÀY 14/0...',
+          content: 'Gửi phụ huynh các bé, hôm nay thời tiết lạnh chỉ 5 độ C, nhà trường thông báo...',
+          time: '08:00 10/04/2023',
+        ),
       ],
     );
   }
@@ -160,7 +140,9 @@ class _NotificationTeacherScreenState extends State<NotificationTeacherScreen>
   Widget _buildSentNotificationList() {
     return ListView(
       padding: EdgeInsets.all(16),
-      children: [],
+      children: [
+
+      ],
     );
   }
 
@@ -210,11 +192,7 @@ class _NotificationTeacherScreenState extends State<NotificationTeacherScreen>
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    Icon(
-                      Icons.arrow_forward_ios_rounded,
-                      color: Colors.grey,
-                      size: 16,
-                    ),
+                    Icon(Icons.arrow_forward_ios_rounded, color: Colors.grey,size: 16,),
                   ],
                 ),
                 SizedBox(height: 8),

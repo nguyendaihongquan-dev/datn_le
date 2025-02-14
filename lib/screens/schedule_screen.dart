@@ -1,8 +1,56 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:pear_app/res/images/app_images.dart';
 
-class ScheduleScreen extends StatelessWidget {
+class ScheduleScreen extends StatefulWidget {
   const ScheduleScreen({Key? key}) : super(key: key);
+
+  @override
+  State<ScheduleScreen> createState() => _ScheduleScreenState();
+}
+
+class _ScheduleScreenState extends State<ScheduleScreen> {
+  double lat = 0;
+  double long = 0;
+  late final DatabaseReference _databaseReference;
+  void _setDeviceState(String path, bool state) async {
+    _databaseReference = FirebaseDatabase.instance.ref('/control').child(path);
+
+    try {
+      await _databaseReference.set(state);
+      print("Giá trị đã cập nhật: $state");
+    } catch (e) {
+      print("Lỗi khi cập nhật Firebase: $e");
+    }
+  }
+
+  Future<void> _initData() async {
+    DatabaseReference latFirebase =
+        FirebaseDatabase.instance.ref('/firealarm').child('temp');
+    DatabaseReference longFirebase =
+        FirebaseDatabase.instance.ref('/firealarm').child('humi');
+
+    latFirebase.onValue.listen((event) {
+      var data = event.snapshot.value;
+      setState(() {
+        lat = double.parse(data.toString());
+      });
+    });
+
+    longFirebase.onValue.listen((event) {
+      var data = event.snapshot.value;
+      setState(() {
+        long = double.parse(data.toString());
+      });
+    });
+    //monitor
+  }
+
+  @override
+  void initState() {
+    _initData();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,20 +86,24 @@ class ScheduleScreen extends StatelessWidget {
                 child: Container(
                   decoration: const BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                    borderRadius:
+                        BorderRadius.vertical(top: Radius.circular(20)),
                   ),
-                //  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  //  padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Column(
-                    children:  [
-                     const SizedBox(height: 24,),
+                    children: [
+                      const SizedBox(
+                        height: 24,
+                      ),
                       Container(
-                        height: MediaQuery.of(context).size.height/3,
+                        height: MediaQuery.of(context).size.height / 3,
                         width: double.infinity,
                         color: Colors.grey[200],
-                         child: Image.asset(AppImages.image13,fit: BoxFit.fill,),
+                        child: Image.asset(
+                          AppImages.image13,
+                          fit: BoxFit.fill,
+                        ),
                       ),
-
-
                       Expanded(
                         child: SingleChildScrollView(
                           child: Container(
@@ -67,11 +119,14 @@ class ScheduleScreen extends StatelessWidget {
                                         color: Colors.red[50],
                                         shape: BoxShape.circle,
                                       ),
-                                      child: const Icon(Icons.location_on_rounded, color: Colors.red),
+                                      child: const Icon(
+                                          Icons.location_on_rounded,
+                                          color: Colors.red),
                                     ),
                                     const SizedBox(width: 16),
                                     const Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           'Điểm đến',
@@ -84,7 +139,6 @@ class ScheduleScreen extends StatelessWidget {
                                           'Trường tiểu học Nguyễn Xá',
                                           style: TextStyle(
                                             fontSize: 16,
-
                                           ),
                                         ),
                                       ],
@@ -93,7 +147,10 @@ class ScheduleScreen extends StatelessWidget {
                                 ),
 
                                 const SizedBox(height: 12),
-                                Container(height: 1,color: Colors.black.withOpacity(0.15),),
+                                Container(
+                                  height: 1,
+                                  color: Colors.black.withOpacity(0.15),
+                                ),
                                 const SizedBox(height: 12),
                                 Row(
                                   children: [
@@ -103,11 +160,14 @@ class ScheduleScreen extends StatelessWidget {
                                         color: Colors.red[50],
                                         shape: BoxShape.circle,
                                       ),
-                                      child: const Icon(Icons.access_time_filled_rounded, color: Colors.red),
+                                      child: const Icon(
+                                          Icons.access_time_filled_rounded,
+                                          color: Colors.red),
                                     ),
                                     const SizedBox(width: 16),
                                     const Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           'Thời gian tới dự kiến',
@@ -120,7 +180,6 @@ class ScheduleScreen extends StatelessWidget {
                                           '08:30 AM',
                                           style: TextStyle(
                                             fontSize: 16,
-
                                           ),
                                         ),
                                       ],
@@ -129,9 +188,11 @@ class ScheduleScreen extends StatelessWidget {
                                 ),
 
                                 const SizedBox(height: 12),
-                                Container(height: 1,color: Colors.black.withOpacity(0.15),),
+                                Container(
+                                  height: 1,
+                                  color: Colors.black.withOpacity(0.15),
+                                ),
                                 const SizedBox(height: 12),
-
 
                                 _buildTimelineItem(
                                   'Điểm đón Hoàng Mai',
@@ -146,7 +207,10 @@ class ScheduleScreen extends StatelessWidget {
                                   true,
                                 ),
                                 const SizedBox(height: 12),
-                                Container(height: 1,color: Colors.black.withOpacity(0.15),),
+                                Container(
+                                  height: 1,
+                                  color: Colors.black.withOpacity(0.15),
+                                ),
                                 const SizedBox(height: 12),
                                 _buildTimelineItem(
                                   'Trường Tiểu học Nguyễn Xá',
@@ -176,7 +240,8 @@ class ScheduleScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTimelineItem(String title, String time, IconData icon, bool showLine) {
+  Widget _buildTimelineItem(
+      String title, String time, IconData icon, bool showLine) {
     return Row(
       children: [
         SizedBox(

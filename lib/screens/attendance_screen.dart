@@ -4,8 +4,11 @@ import 'package:pear_app/model/students_model.dart';
 import 'package:pear_app/network/api/api_response.dart';
 import 'package:pear_app/network/api_request.dart';
 import 'package:pear_app/res/images/app_images.dart';
+import 'package:pear_app/utils/app_functions.dart';
 import 'package:pear_app/widgets/app_button.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:pear_app/widgets/error_dialog.dart';
+import 'package:pear_app/widgets/success_dialog.dart';
 
 enum CheckStatus {
   blank,
@@ -99,7 +102,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
 
     for (int i = 1; i <= 5; i++) {
       // String path = "attendance/$date/Bus1/$i/arrive/arrive_state";
-      String path = "attendance/13-02-2025/bus_1/24x00$i/arrive/arrive_state";
+      String path = "attendance/$date/bus_1/24x00$i/arrive/arrive_state";
       DatabaseReference ref = databaseRef.child(path);
       ref.onValue.listen((event) {
         if (event.snapshot.exists) {
@@ -125,7 +128,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
 
     for (int i = 1; i <= 5; i++) {
       // String path = "attendance/$date/Bus1/$i/arrive/arrive_state";
-      String path = "attendance/13-02-2025/bus_1/24x00$i/leave/leave_state";
+      String path = "attendance/$date/bus_1/24x00$i/leave/leave_state";
       DatabaseReference ref = databaseRef.child(path);
       ref.onValue.listen((event) {
         if (event.snapshot.exists) {
@@ -410,6 +413,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                         left: 16,
                         child: AppButton(
                           onPressed: () async {
+                            AppFunctions.showLoading(context);
                             List<Map<String, dynamic>> listData = [];
                             for (var e in listStudents) {
                               listData.add({
@@ -425,10 +429,12 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                             }
                             ApiResponse res =
                                 await ApiRequest.checkAttendance(listData);
-                            if (res.code == 200) {
-                              print("oke");
+                            if (res.code == 201) {
+                              AppFunctions.hideLoading(context);
+                              SuccessDialog.show(context, res.message);
                             } else {
-                              print(res.message);
+                              AppFunctions.hideLoading(context);
+                              ErrorDialog.show(context, res.message);
                             }
                           },
                           text: "Lưu điểm danh",

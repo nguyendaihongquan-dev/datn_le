@@ -5,7 +5,7 @@ class AppImages {
 
   // logo
 
-  static const String success = '${_internalImagePath}success.png';
+  static const String success = '${_internalImagePath}success.jpg';
 
 
   // button
@@ -21,11 +21,6 @@ class AppImages {
   static const String iconWineGlass = '${_internalImagePath}icon_wine_glass.png';
   static const String iconSmoking = '${_internalImagePath}icon_smoking.png';
   static const String iconMicrophone = '${_internalImagePath}icon_microphone.png';
-  static const String iconItemBottomVavigationSearch = '${_internalImagePath}icon_itemBottomVavigation_search.png';
-  static const String iconItemBottomVavigationUser = '${_internalImagePath}icon_itemBottomVavigation_user.png';
-  static const String iconItemBottomVavigationLike = '${_internalImagePath}icon_itemBottomVavigation_like.png';
-  static const String iconItemBottomVavigationMessage = '${_internalImagePath}icon_itemBottomVavigation_message.png';
-  static const String iconItemBottomVavigationCategory = '${_internalImagePath}icon_itemBottomVavigation_category.png';
   static const String iconSearch = '${_internalImagePath}icon_search.png';
   static const String iconHeart = '${_internalImagePath}icon_heart.png';
   static const String iconVerify = '${_internalImagePath}icon_verify.png';
@@ -36,41 +31,8 @@ class AppImages {
   static const String iconNotify = '${_internalImagePath}icon_notify.png';
   static const String iconNofifyCrown = '${_internalImagePath}icon_nofify_crown.png';
   static const String iconNotifyVerify = '${_internalImagePath}icon_notify_verify.png';
-  static const String iconNotifyItemSuperlike = '${_internalImagePath}icon_notify_item_superlike.png';
-  static const String iconNotifyItemLike = '${_internalImagePath}icon_notify_item_like.png';
-  static const String iconDetailSearch = '${_internalImagePath}icon_detail_search.png';
-  static const String iconDetailQuotes = '${_internalImagePath}icon_detail_quotes.png';
-  static const String iconDetailDistance = '${_internalImagePath}icon_detail_distance.png';
-  static const String iconDetailHeight = '${_internalImagePath}icon_detail_height.png';
-  static const String iconDetailGender = '${_internalImagePath}icon_detail_gender.png';
-  static const String iconDetailSchool = '${_internalImagePath}icon_detail_school.png';
-  static const String iconDetailHome = '${_internalImagePath}icon_detail_home.png';
-  static const String iconDetailCommunicate = '${_internalImagePath}icon_detail_communicate.png';
-  static const String iconDetailEducationalLevel = '${_internalImagePath}icon_detail_educational_level.png';
-  static const String iconDetailHoroscope = '${_internalImagePath}icon_detail_horoscope.png';
-  static const String iconDetailLike = '${_internalImagePath}icon_detail_like.png';
-  static const String iconDetailWeight = '${_internalImagePath}icon_detail_weight.png';
-  static const String iconDetailWine = '${_internalImagePath}icon_detail_wine.png';
-  static const String iconDetailDiet = '${_internalImagePath}icon_detail_diet.png';
-  static const String iconDetailSmoking = '${_internalImagePath}icon_detail_smoking.png';
-  static const String iconDetailSend = '${_internalImagePath}icon_detail_send.png';
-  static const String iconBlueStar = '${_internalImagePath}icon_blue_star.png';
-  static const String lineConnect = '${_internalImagePath}line_connect.png';
-  static const String iconHeartCircle = '${_internalImagePath}icon_heart_circle.png';
-  static const String iconCheckCircle = '${_internalImagePath}icon_check_circle.png';
-  static const String iconDiscoveryCardQuantityMember = '${_internalImagePath}icon_discovery_card_quantity_member.png';
-  static const String iconFilter = '${_internalImagePath}icon_filter.png';
-  static const String iconCrown = '${_internalImagePath}icon_crown.png';
-  static const String iconSend = '${_internalImagePath}icon_send.png';
 
-  static const String rectangle_332 = '${_internalImagePath}rectangle_332.png';
-  static const String rectangle_333 = '${_internalImagePath}rectangle_333.png';
-  static const String rectangle_334 = '${_internalImagePath}rectangle_334.png';
-  static const String rectangle_335 = '${_internalImagePath}rectangle_335.png';
-  static const String rectangle_336 = '${_internalImagePath}rectangle_336.png';
-  static const String rectangle_337 = '${_internalImagePath}rectangle_337.png';
 
-  static const String iconCrownPremium = '${_internalImagePath}icon_crown_premium.png';
   static const String iconSecurityUser = '${_internalImagePath}icon_security_user.png';
   static const String iconAccelerate = '${_internalImagePath}icon_accelerate.png';
 
@@ -79,35 +41,6 @@ class AppImages {
   static const String iconSettingsOutline = '${_internalImagePath}icon_settings_outline.png';
   static const String iconSecurityUserOutline = '${_internalImagePath}icon_security_user_outline.png';
 
-  static const String iconEditQuoteUp = '${_internalImagePath}icon_edit_quote_up.png';
-  static const String iconEditMobile = '${_internalImagePath}icon_edit_mobile.png';
-  static const String iconEditCalendar = '${_internalImagePath}icon_edit_calendar.png';
-  static const String iconEditAirplane = '${_internalImagePath}icon_edit_airplane.png';
-  static const String iconEditMoon = '${_internalImagePath}icon_edit_moon.png';
-  static const String iconEditGlobal = '${_internalImagePath}icon_edit_global.png';
-  static const String iconEditMilk = '${_internalImagePath}icon_edit_milk.png';
-  static const String iconEditWeight = '${_internalImagePath}icon_edit_weight.png';
-  static const String iconEditSmoking = '${_internalImagePath}icon_edit_smoking.png';
-  static const String iconEditWineGlass = '${_internalImagePath}icon_edit_wine_glass.png';
-  static const String iconEditPet = '${_internalImagePath}icon_edit_pet.png';
-  static const String iconEditHeartCircle = '${_internalImagePath}icon_edit_heart_circle.png';
-  static const String iconEditMessages3 = '${_internalImagePath}icon_edit_messages_3.png';
-  static const String iconEditPuzzlePiece = '${_internalImagePath}icon_edit_PuzzlePiece.png';
-  static const String iconEditFaceMask = '${_internalImagePath}icon_edit_FaceMask.png';
-  static const String iconEditPeople = '${_internalImagePath}icon_edit_people.png';
-  static const String iconEditTeacher = '${_internalImagePath}icon_edit_teacher.png';
-  static const String iconEditStar = '${_internalImagePath}icon_edit_star.png';
-  static const String iconEditLanguageCircle = '${_internalImagePath}icon_edit_language_circle.png';
-  static const String iconEditRuler = '${_internalImagePath}icon_edit_ruler.png';
-  static const String iconEditMessageSquare = '${_internalImagePath}icon_edit_message_square.png';
-  static const String iconEditSearchNormal = '${_internalImagePath}icon_edit_search_normal.png';
-  static const String iconEditEmojiHappy = '${_internalImagePath}icon_edit_emoji_happy.png';
-  static const String iconEditHouse = '${_internalImagePath}icon_edit_house.png';
-  static const String iconEditBuliding = '${_internalImagePath}icon_edit_buliding.png';
-  static const String iconEditBuilding_4 = '${_internalImagePath}icon_edit_building_4.png';
-  static const String iconEditUserTag = '${_internalImagePath}icon_edit_user_tag.png';
-  static const String iconEditUserSquare = '${_internalImagePath}icon_edit_user_square.png';
-  static const String iconEditUser = '${_internalImagePath}icon_edit_user.png';
 
   static const String iconCalender = '${_internalImagePath}icon_calender.png';
   static const String iconClock = '${_internalImagePath}icon_clock.png';
@@ -136,4 +69,10 @@ class AppImages {
   static const String profileLogout = '${_internalImagePath}profile_logout.png';
   static const String image13 = '${_internalImagePath}image 13.png';
   static const String group33303 = '${_internalImagePath}group33303.png';
+
+  static const String adMenu1 = '${_internalImagePath}Pin_alt_fill_1.png';
+  static const String adMenu2 = '${_internalImagePath}Pin_alt_fill.png';
+  static const String adMenu3 = '${_internalImagePath}Routing 2.png';
+  static const String adMenu4 = '${_internalImagePath}group_add_fill.png';
+
 }

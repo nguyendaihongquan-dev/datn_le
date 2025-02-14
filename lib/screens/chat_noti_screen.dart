@@ -27,21 +27,23 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text(
-          "FlutterChat",
+          "Nhóm chat chung",
         ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              // FirebaseAuth.instance.signOut();
-            },
-            icon: Icon(
-              Icons.exit_to_app,
-              color: Theme.of(context).colorScheme.primary,
-            ),
-          )
-        ],
+        leading: Container(),
+        // actions: [
+        //   IconButton(
+        //     onPressed: () {
+        //       // FirebaseAuth.instance.signOut();
+        //     },
+        //     icon: Icon(
+        //       Icons.exit_to_app,
+        //       color: Theme.of(context).colorScheme.primary,
+        //     ),
+        //   )
+        // ],
       ),
       body: const Column(
         children: [

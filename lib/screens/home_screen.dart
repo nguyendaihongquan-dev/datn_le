@@ -1,9 +1,20 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:pear_app/model/students_model.dart';
+import 'package:pear_app/network/api/api_response.dart';
+import 'package:pear_app/network/api_request.dart';
 import 'package:pear_app/res/images/app_images.dart';
+import 'package:pear_app/screens/feedback_list_screen.dart';
+import 'package:pear_app/screens/list_attendance_route_screen.dart';
+import 'package:pear_app/screens/list_students_in_point_screen.dart';
+import 'package:pear_app/screens/location_tracking_screen.dart';
+import 'package:pear_app/screens/reflect_screen.dart';
+import 'package:pear_app/screens/route_view_screen.dart';
 import 'package:pear_app/screens/schedule_screen.dart';
 import 'package:pear_app/screens/teacher_profile_screen.dart';
 import 'package:pear_app/utils/app_functions.dart';
+import 'package:pear_app/widgets/error_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -23,6 +34,18 @@ class _HomeScreenState extends State<HomeScreen> {
   CalendarFormat calendarFormat = CalendarFormat.week;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
+  List<StudentsModel> pickupStudent = [];
+  Future<void> getStudents() async {
+    ApiResponse res = await ApiRequest.getListStudentsByMe();
+    if (res.code == 200) {
+      for (var e in res.data) {
+        pickupStudent.add(StudentsModel.fromJson(e));
+      }
+      setState(() {});
+    } else {
+      ErrorDialog.show(context, res.message);
+    }
+  }
 
   List<PickupPoint> pickupPoints = [
     PickupPoint(
@@ -33,28 +56,28 @@ class _HomeScreenState extends State<HomeScreen> {
     PickupPoint(name: 'Điểm đón Đống Đa', studentCount: 10, color: Colors.blue),
   ];
 
-  List<PickupStudent> pickupStudent = [
-    PickupStudent(
-        point: 'Điểm đón Hoàng Mai',
-        name: "Phạm Minh Anh",
-        classStudent: "1A",
-        image: AppImages.man),
-    PickupStudent(
-        point: 'Điểm đón Hai Bà Trưng',
-        name: "Phạm Minh Anh",
-        classStudent: "1A",
-        image: AppImages.man),
-    PickupStudent(
-        point: 'Điểm đón Đống Đa',
-        name: "Phạm Minh Anh",
-        classStudent: "1A",
-        image: AppImages.man),
-    PickupStudent(
-        point: 'Điểm đón Đống Đa',
-        name: "Phạm Minh Anh",
-        classStudent: "1A",
-        image: AppImages.man),
-  ];
+  // List<PickupStudent> pickupStudent = [
+  //   PickupStudent(
+  //       point: 'Điểm đón Hoàng Mai',
+  //       name: "Phạm Minh Anh",
+  //       classStudent: "1A",
+  //       image: AppImages.man),
+  //   PickupStudent(
+  //       point: 'Điểm đón Hai Bà Trưng',
+  //       name: "Phạm Minh Anh",
+  //       classStudent: "1A",
+  //       image: AppImages.man),
+  //   PickupStudent(
+  //       point: 'Điểm đón Đống Đa',
+  //       name: "Phạm Minh Anh",
+  //       classStudent: "1A",
+  //       image: AppImages.man),
+  //   PickupStudent(
+  //       point: 'Điểm đón Đống Đa',
+  //       name: "Phạm Minh Anh",
+  //       classStudent: "1A",
+  //       image: AppImages.man),
+  // ];
 
   String _formatMonthYear(DateTime date) {
     return 'Tháng ${date.month}/${date.year}';
@@ -93,6 +116,12 @@ class _HomeScreenState extends State<HomeScreen> {
         _focusedDay = picked;
       });
     }
+  }
+
+  @override
+  void initState() {
+    getStudents();
+    super.initState();
   }
 
   @override
@@ -153,7 +182,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 ),
                                                 TextSpan(
                                                   text: user.userModel.fullName,
-                                                  style:const TextStyle(
+                                                  style: const TextStyle(
                                                       fontWeight:
                                                           FontWeight.bold,
                                                       color: Colors.black),
@@ -220,17 +249,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                   Row(
                                     children: [
                                       InkWell(
-                                          onTap: () {
-                                            setState(() {
-                                              _focusedDay =
-                                                  _focusedDay.subtract(
-                                                      const Duration(days: 7));
-                                            });
-                                          },
-                                          child: const Icon(
-                                            Icons.arrow_back_ios_rounded,
-                                            size: 24,
-                                          )),
+                                        onTap: () {
+                                          setState(() {
+                                            _focusedDay = _focusedDay.subtract(
+                                                const Duration(days: 7));
+                                          });
+                                        },
+                                        child: const Icon(
+                                          Icons.arrow_back_ios_rounded,
+                                          size: 24,
+                                        ),
+                                      ),
                                       Expanded(
                                         child: TableCalendar(
                                           firstDay: DateTime.utc(2020, 1, 1),
@@ -306,141 +335,144 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],
                         ),
                       ),
-                      Container(
-                        color: Colors.white,
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                                _selectedDay == null
-                                    ? "Ngày ${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}"
-                                    : "Ngày ${_selectedDay!.day}/${_selectedDay!.month}/${_selectedDay!.year}",
-                                style: const TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.w500)),
-                            const SizedBox(
-                              height: 8,
-                            ),
-                            Row(
-                              children: [
-                                _buildInfoCard(
-                                    icon: AppImages.car1,
-                                    title: "Biển số",
-                                    value: "17B2-215326",
-                                    color: Colors.green.shade100,
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              const ScheduleScreen(),
-                                        ),
-                                      );
-                                    }),
-                                _buildInfoCard(
-                                    icon: AppImages.man,
-                                    title: "Tài xế",
-                                    value: "Nguyễn Việt Hoàng",
-                                    color: Colors.amber.shade100,
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              const DriverProfileScreen(),
-                                        ),
-                                      );
-                                    }),
-                                user.role == Role.teacher
-                                    ? _buildInfoCard(
-                                        icon: AppImages.image3,
-                                        title: "Học sinh",
-                                        value: "30",
-                                        color: Colors.blue.shade100,
-                                        onTap: () {})
-                                    : user.role == Role.parents
-                                        ? _buildInfoCard(
-                                            icon: AppImages.image3,
-                                            title: "Giáo viên",
-                                            value: "Nguyễn Viết Thắng",
-                                            color: Colors.blue.shade100,
-                                            onTap: () {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      const TeacherProfileScreen(),
-                                                ),
-                                              );
-                                            })
-                                        : const SizedBox.shrink(),
-                              ].addBetween(const SizedBox(
-                                width: 8,
-                              )),
-                            ),
-                            const SizedBox(
-                              height: 8,
-                            ),
-                            user.role == Role.teacher
-                                ? Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: List.generate(pickupPoints.length,
-                                        (index) {
-                                      final point = pickupPoints[index];
-                                      return Card(
-                                        elevation: 0.3,
-                                        color: Colors.white,
-                                        // margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                                        child: ListTile(
-                                          leading: Icon(Icons.menu_book_rounded,
-                                              color: point.color),
-                                          title: Text(point.name,
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold)),
-                                          subtitle: Text(
-                                              "Số lượng học sinh: ${point.studentCount}"),
-                                          trailing: const Icon(
-                                              Icons.arrow_forward_ios,
-                                              size: 16),
-                                        ),
-                                      );
-                                    }),
-                                  )
-                                : user.role == Role.parents
-                                    ? Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: List.generate(
-                                            pickupStudent.length, (index) {
-                                          final point = pickupStudent[index];
-                                          return Card(
-                                            elevation: 0.3,
-                                            color: Colors.white,
-                                            // margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                                            child: ListTile(
-                                              leading: Image.asset(
-                                                point.image,
-                                                width: 40,
-                                                height: 40,
-                                              ),
-                                              title: Text(
-                                                  "${point.name} - ${point.classStudent}",
-                                                  style: const TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold)),
-                                              subtitle: Text(
-                                                  "Điểm đón: ${point.point}"),
-                                              trailing: const Icon(
-                                                  Icons.arrow_forward_ios,
-                                                  size: 16),
-                                            ),
-                                          );
-                                        }),
-                                      )
-                                    : const SizedBox.shrink()
-                          ],
-                        ),
-                      )
+                      user.role == Role.admin
+                          ? _adminMenu(context)
+                          : _userMenu(context),
+                      // Container(
+                      //   color: Colors.white,
+                      //   padding: const EdgeInsets.symmetric(horizontal: 16),
+                      //   child: Column(
+                      //     mainAxisSize: MainAxisSize.min,
+                      //     crossAxisAlignment: CrossAxisAlignment.start,
+                      //     children: [
+                      //       Text(
+                      //           _selectedDay == null
+                      //               ? "Ngày ${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}"
+                      //               : "Ngày ${_selectedDay!.day}/${_selectedDay!.month}/${_selectedDay!.year}",
+                      //           style: const TextStyle(
+                      //               fontSize: 16, fontWeight: FontWeight.w500)),
+                      //       const SizedBox(
+                      //         height: 8,
+                      //       ),
+                      //       Row(
+                      //         children: [
+                      //           _buildInfoCard(
+                      //               icon: AppImages.car1,
+                      //               title: "Biển số",
+                      //               value: "17B2-215326",
+                      //               color: Colors.green.shade100,
+                      //               onTap: () {
+                      //                 Navigator.push(
+                      //                   context,
+                      //                   MaterialPageRoute(
+                      //                     builder: (context) =>
+                      //                         const ScheduleScreen(),
+                      //                   ),
+                      //                 );
+                      //               }),
+                      //           _buildInfoCard(
+                      //               icon: AppImages.man,
+                      //               title: "Tài xế",
+                      //               value: "Nguyễn Việt Hoàng",
+                      //               color: Colors.amber.shade100,
+                      //               onTap: () {
+                      //                 Navigator.push(
+                      //                   context,
+                      //                   MaterialPageRoute(
+                      //                     builder: (context) =>
+                      //                         const DriverProfileScreen(),
+                      //                   ),
+                      //                 );
+                      //               }),
+                      //           user.role == Role.teacher
+                      //               ? _buildInfoCard(
+                      //                   icon: AppImages.image3,
+                      //                   title: "Học sinh",
+                      //                   value: "30",
+                      //                   color: Colors.blue.shade100,
+                      //                   onTap: () {})
+                      //               : user.role == Role.parents
+                      //                   ? _buildInfoCard(
+                      //                       icon: AppImages.image3,
+                      //                       title: "Giáo viên",
+                      //                       value: "Nguyễn Viết Thắng",
+                      //                       color: Colors.blue.shade100,
+                      //                       onTap: () {
+                      //                         Navigator.push(
+                      //                           context,
+                      //                           MaterialPageRoute(
+                      //                             builder: (context) =>
+                      //                                 const TeacherProfileScreen(),
+                      //                           ),
+                      //                         );
+                      //                       })
+                      //                   : const SizedBox.shrink(),
+                      //         ].addBetween(const SizedBox(
+                      //           width: 8,
+                      //         )),
+                      //       ),
+                      //       const SizedBox(
+                      //         height: 8,
+                      //       ),
+                      //       user.role == Role.teacher
+                      //           ? Column(
+                      //               mainAxisSize: MainAxisSize.min,
+                      //               children: List.generate(pickupPoints.length,
+                      //                   (index) {
+                      //                 final point = pickupPoints[index];
+                      //                 return Card(
+                      //                   elevation: 0.3,
+                      //                   color: Colors.white,
+                      //                   // margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      //                   child: ListTile(
+                      //                     leading: Icon(Icons.menu_book_rounded,
+                      //                         color: point.color),
+                      //                     title: Text(point.name,
+                      //                         style: const TextStyle(
+                      //                             fontWeight: FontWeight.bold)),
+                      //                     subtitle: Text(
+                      //                         "Số lượng học sinh: ${point.studentCount}"),
+                      //                     trailing: const Icon(
+                      //                         Icons.arrow_forward_ios,
+                      //                         size: 16),
+                      //                   ),
+                      //                 );
+                      //               }),
+                      //             )
+                      //           : user.role == Role.parents
+                      //               ? Column(
+                      //                   mainAxisSize: MainAxisSize.min,
+                      //                   children: List.generate(
+                      //                       pickupStudent.length, (index) {
+                      //                     final point = pickupStudent[index];
+                      //                     return Card(
+                      //                       elevation: 0.3,
+                      //                       color: Colors.white,
+                      //                       // margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      //                       child: ListTile(
+                      //                         leading: Image.asset(
+                      //                           point.image,
+                      //                           width: 40,
+                      //                           height: 40,
+                      //                         ),
+                      //                         title: Text(
+                      //                             "${point.name} - ${point.classStudent}",
+                      //                             style: const TextStyle(
+                      //                                 fontWeight:
+                      //                                     FontWeight.bold)),
+                      //                         subtitle: Text(
+                      //                             "Điểm đón: ${point.point}"),
+                      //                         trailing: const Icon(
+                      //                             Icons.arrow_forward_ios,
+                      //                             size: 16),
+                      //                       ),
+                      //                     );
+                      //                   }),
+                      //                 )
+                      //               : const SizedBox.shrink()
+                      //     ],
+                      //   ),
+                      // )
                     ],
                   )
                 ],
@@ -485,12 +517,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   : user.role == Role.parents
                       ? InkWell(
                           onTap: () {
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //     builder: (context) =>  const AttendanceScreen(),
-                            //   ),
-                            // );
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const ReflectScreen(),
+                              ),
+                            );
                           },
                           child: Container(
                             padding: const EdgeInsets.all(14),
@@ -523,27 +555,192 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  String formatVietnameseDate(DateTime dateTime) {
+    // Lấy tên ngày trong tuần bằng tiếng Việt
+    List<String> weekdays = [
+      'Chủ Nhật',
+      'Thứ 2',
+      'Thứ 3',
+      'Thứ 4',
+      'Thứ 5',
+      'Thứ 6',
+      'Thứ 7'
+    ];
+
+    String weekday =
+        weekdays[dateTime.weekday % 7]; // weekday từ 1-7, Chủ Nhật là 0
+    String day = DateFormat('dd').format(dateTime);
+    String monthYear = DateFormat('MM/yyyy').format(dateTime);
+
+    return "$weekday, $day/$monthYear";
+  }
+
+  Widget _userMenu(BuildContext context) {
+    final user = context.read<UserProvider>();
+    return Container(
+      color: Colors.white,
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+              _selectedDay == null
+                  ? "Ngày ${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}"
+                  : "Ngày ${_selectedDay!.day}/${_selectedDay!.month}/${_selectedDay!.year}",
+              style:
+                  const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+          const SizedBox(
+            height: 8,
+          ),
+          Row(
+            children: [
+              _buildInfoCard(
+                  icon: AppImages.car1,
+                  title: "Biển số",
+                  value: "17B2-215326",
+                  color: Colors.green.shade100,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ScheduleScreen(),
+                      ),
+                    );
+                  }),
+              _buildInfoCard(
+                  icon: AppImages.man,
+                  title: "Tài xế",
+                  value: "Nguyễn Việt Hoàng",
+                  color: Colors.amber.shade100,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const DriverProfileScreen(),
+                      ),
+                    );
+                  }),
+              user.role == Role.teacher
+                  ? _buildInfoCard(
+                      icon: AppImages.image3,
+                      title: "Học sinh",
+                      value: "30",
+                      color: Colors.blue.shade100,
+                      onTap: () {})
+                  : user.role == Role.parents
+                      ? _buildInfoCard(
+                          icon: AppImages.image3,
+                          title: "Giáo viên",
+                          value: "Nguyễn Viết Thắng",
+                          color: Colors.blue.shade100,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const TeacherProfileScreen(),
+                              ),
+                            );
+                          })
+                      : const SizedBox.shrink(),
+            ].addBetween(const SizedBox(
+              width: 8,
+            )),
+          ),
+          const SizedBox(
+            height: 8,
+          ),
+          user.role == Role.teacher
+              ? Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: List.generate(pickupPoints.length, (index) {
+                    final point = pickupPoints[index];
+                    return InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const StudentListScreen(),
+                          ),
+                        );
+                      },
+                      child: Card(
+                        elevation: 0.3,
+                        color: Colors.white,
+                        // margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        child: ListTile(
+                          leading:
+                              Icon(Icons.menu_book_rounded, color: point.color),
+                          title: Text(point.name,
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold)),
+                          subtitle:
+                              Text("Số lượng học sinh: ${point.studentCount}"),
+                          trailing:
+                              const Icon(Icons.arrow_forward_ios, size: 16),
+                        ),
+                      ),
+                    );
+                  }),
+                )
+              : user.role == Role.parents
+                  ? Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: List.generate(pickupStudent.length, (index) {
+                        final point = pickupStudent[index];
+                        return Card(
+                          elevation: 0.3,
+                          color: Colors.white,
+                          // margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          child: ListTile(
+                            leading: Image.asset(
+                              AppImages.man,
+                              width: 40,
+                              height: 40,
+                            ),
+                            title: Text(
+                                "${point.fullName} - ${point.className}",
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold)),
+                            subtitle: Text("Điểm đón: Điểm đón hoàng mai}"),
+                            trailing:
+                                const Icon(Icons.arrow_forward_ios, size: 16),
+                          ),
+                        );
+                      }),
+                    )
+                  : const SizedBox.shrink()
+        ],
+      ),
+    );
+  }
+
   Widget _buildInfoCard(
       {required String icon,
       required String title,
-      required String value,
+      String? value,
       required Color color,
-      required Function() onTap}) {
+      required Function() onTap,
+      bool? adMenu}) {
     return Expanded(
       child: InkWell(
         onTap: onTap,
         child: Container(
-          height: 110,
-          padding: const EdgeInsets.all(12),
+          height: adMenu == true ? null : 110,
+          padding: EdgeInsets.all(adMenu == true ? 16 : 12),
           decoration: BoxDecoration(
             color: color,
             borderRadius: BorderRadius.circular(12),
           ),
           child: Column(
+            mainAxisAlignment: adMenu == true
+                ? MainAxisAlignment.center
+                : MainAxisAlignment.start,
             children: [
               Container(
-                width: 40,
-                height: 40,
+                width: adMenu == true ? 56 : 40,
+                height: adMenu == true ? 56 : 40,
                 decoration: const BoxDecoration(
                     shape: BoxShape.circle, color: Colors.white),
                 padding: const EdgeInsets.all(5),
@@ -551,7 +748,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   icon,
                 ),
               ),
-              const SizedBox(height: 4),
+              SizedBox(height: adMenu == true ? 8 : 4),
               AutoSizeText(
                 title,
                 style: const TextStyle(fontWeight: FontWeight.bold),
@@ -559,18 +756,160 @@ class _HomeScreenState extends State<HomeScreen> {
                 maxFontSize: 14,
                 minFontSize: 1,
               ),
-              AutoSizeText(
-                value,
-                maxLines: 1,
-                maxFontSize: 14,
-                minFontSize: 1,
-              ),
+              value != null
+                  ? AutoSizeText(
+                      value,
+                      maxLines: 1,
+                      maxFontSize: 14,
+                      minFontSize: 1,
+                    )
+                  : const SizedBox.shrink(),
             ],
           ),
         ),
       ),
     );
   }
+
+  Widget _adminMenu(BuildContext context) {
+    return Container(
+      color: Colors.white,
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+              _selectedDay == null
+                  ? "Ngày ${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}"
+                  : "Ngày ${_selectedDay!.day}/${_selectedDay!.month}/${_selectedDay!.year}",
+              style:
+                  const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+          const SizedBox(
+            height: 8,
+          ),
+          Row(
+            children: [
+              _buildInfoCard(
+                  adMenu: true,
+                  icon: AppImages.adMenu4,
+                  title: "Điểm danh",
+                  color: Colors.red.shade100,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ListAttendanceRouteScreen(),
+                      ),
+                    );
+                  }),
+              const SizedBox(
+                width: 8,
+              ),
+              _buildInfoCard(
+                  adMenu: true,
+                  icon: AppImages.adMenu3,
+                  title: "Tuyến đường",
+                  color: Colors.green.shade100,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const RouteViewScreen(),
+                      ),
+                    );
+                  }),
+            ],
+          ),
+          const SizedBox(
+            height: 8,
+          ),
+          Row(
+            children: [
+              _buildInfoCard(
+                  adMenu: true,
+                  icon: AppImages.adMenu2,
+                  title: "Vị trí",
+                  color: Colors.blue.shade100,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const LocationTrackingScreen(),
+                      ),
+                    );
+                  }),
+              const SizedBox(
+                width: 8,
+              ),
+              _buildInfoCard(
+                  adMenu: true,
+                  icon: AppImages.adMenu1,
+                  title: "Phản ánh",
+                  color: Colors.purple.shade100,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const FeedbackListScreen(),
+                      ),
+                    );
+                  }),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Widget _buildInfoCard(
+  //     {required String icon,
+  //     required String title,
+  //     required String value,
+  //     required Color color,
+  //     required Function() onTap}) {
+  //   return Expanded(
+  //     child: InkWell(
+  //       onTap: onTap,
+  //       child: Container(
+  //         height: 110,
+  //         padding: const EdgeInsets.all(12),
+  //         decoration: BoxDecoration(
+  //           color: color,
+  //           borderRadius: BorderRadius.circular(12),
+  //         ),
+  //         child: Column(
+  //           children: [
+  //             Container(
+  //               width: 40,
+  //               height: 40,
+  //               decoration: const BoxDecoration(
+  //                   shape: BoxShape.circle, color: Colors.white),
+  //               padding: const EdgeInsets.all(5),
+  //               child: Image.asset(
+  //                 icon,
+  //               ),
+  //             ),
+  //             const SizedBox(height: 4),
+  //             AutoSizeText(
+  //               title,
+  //               style: const TextStyle(fontWeight: FontWeight.bold),
+  //               maxLines: 1,
+  //               maxFontSize: 14,
+  //               minFontSize: 1,
+  //             ),
+  //             AutoSizeText(
+  //               value,
+  //               maxLines: 1,
+  //               maxFontSize: 14,
+  //               minFontSize: 1,
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 }
 
 class PickupPoint {

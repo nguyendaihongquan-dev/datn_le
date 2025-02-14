@@ -28,11 +28,26 @@ class ApiRequest {
     );
   }
 
+  static Future<ApiResponse> getListStudentsByMe() async {
+    return await ApiClient().request(
+      url: "$domain/users/students/me",
+      method: ApiClient.get,
+    );
+  }
+
   static Future<ApiResponse> checkAttendance(
       List<Map<String, dynamic>> listData) async {
     return await ApiClient().request(
       url: "$domain/attendance",
       data: json.encode(listData),
+      method: ApiClient.post,
+    );
+  }
+
+  static Future<ApiResponse> changePass(Map<String, dynamic> data) async {
+    return await ApiClient().request(
+      url: "$domain/auth/forget",
+      data: json.encode(data),
       method: ApiClient.post,
     );
   }
@@ -48,6 +63,21 @@ class ApiRequest {
   static Future<ApiResponse> getNoti() async {
     return await ApiClient().request(
       url: "$domain/notification",
+      method: ApiClient.get,
+    );
+  }
+
+  static Future<ApiResponse> createFeedback(Map<String, dynamic> value) async {
+    return await ApiClient().request(
+      url: "$domain/feedbacks",
+      data: json.encode(value),
+      method: ApiClient.post,
+    );
+  }
+
+  static Future<ApiResponse> getListFeedback() async {
+    return await ApiClient().request(
+      url: "$domain/feedbacks",
       method: ApiClient.get,
     );
   }

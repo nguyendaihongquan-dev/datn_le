@@ -11,21 +11,23 @@ class LoadingWidget extends StatelessWidget {
       color: AppColors.black.withOpacity(0.6),
       child: Center(
           child: Stack(
-            children: [
-              const SizedBox(
-                  width: 50,
-                  height: 50,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    color: AppColors.tertiary,
-                  )),
-              Positioned.fill(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(), // them logo
-                  )),
-            ],
-          )),
+        children: [
+          const SizedBox(
+            width: 50,
+            height: 50,
+            child: CircularProgressIndicator(
+              strokeWidth: 2,
+              color: AppColors.tertiary,
+            ),
+          ),
+          Positioned.fill(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(), // them logo
+            ),
+          ),
+        ],
+      )),
     );
   }
 }

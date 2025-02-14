@@ -205,7 +205,7 @@ class _SelectReceiverDialogState extends State<SelectReceiverDialog> {
                     backgroundColor: const Color(0xFF2196F3),
                     foregroundColor: Colors.white,
                   ),
-                  child:  Text('Lưu điểm danh',style: TextStyle(fontSize: 16),),
+                  child:  Text('Lưu',style: TextStyle(fontSize: 16),),
                 ),
               ),
             ),

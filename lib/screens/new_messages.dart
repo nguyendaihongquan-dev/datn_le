@@ -60,7 +60,7 @@ class _NewMessageState extends State<NewMessage> {
               enableSuggestions: true,
               decoration: const InputDecoration(
                 label: Text(
-                  "Send a message",
+                  "Nhập nội dung....",
                 ),
               ),
             ),

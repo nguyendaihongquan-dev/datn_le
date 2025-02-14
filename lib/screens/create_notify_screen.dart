@@ -3,6 +3,8 @@ import 'package:pear_app/network/api/api_response.dart';
 import 'package:pear_app/network/api_request.dart';
 import 'package:pear_app/screens/select_receiver_dialog.dart';
 import 'package:pear_app/widgets/app_button.dart';
+import 'package:pear_app/widgets/error_dialog.dart';
+import 'package:pear_app/widgets/success_dialog.dart';
 
 class CreateNotifyScreen extends StatefulWidget {
   const CreateNotifyScreen({super.key});
@@ -185,8 +187,13 @@ class _CreateNotifyScreenState extends State<CreateNotifyScreen> {
                 };
                 ApiResponse res = await ApiRequest.createNoti(data);
                 if (res.code == 201) {
+                  SuccessDialog.show(
+                    context,
+                    res.message,
+                  );
+                  Navigator.pop(context, true);
                 } else {
-                  print(res.message);
+                  ErrorDialog.show(context, res.message);
                 }
               },
               text: "Gửi",
