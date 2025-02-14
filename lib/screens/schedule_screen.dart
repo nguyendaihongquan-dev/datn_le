@@ -1,7 +1,6 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
-import 'package:pear_app/res/images/app_images.dart';
 
 import '../theme/app_colors.dart';
 
@@ -23,25 +22,6 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
   _onMapCreated(MapboxMap mapboxMap) {
     this.mapboxMap = mapboxMap;
   }
-
-  customMap(double long, double lat){
-      mapboxMap?.annotations.createCircleAnnotationManager().then((value) {
-        circleAnnotationManager = value;
-        circleAnnotationManager?.create(
-          CircleAnnotationOptions(
-            geometry: Point(coordinates: Position(long, lat)),
-            circleColor: AppColors.primaryRed.value,
-            circleStrokeColor: Colors.white.value,
-            circleStrokeWidth: 2,
-            circleRadius: 6.0,
-          ),
-        );
-        setState(() {
-
-        });
-      });
-  }
-
 
 
 
@@ -79,14 +59,11 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
       });
     });
     //monitor
-       if(long!= null && lat!=null) {
-      customMap(long!,lat!);
-    }
   }
 
   @override
   void initState() {
-    _initData();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async => _initData());
     super.initState();
   }
 
@@ -149,6 +126,24 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                             styleUri: MapboxStyles.MAPBOX_STREETS,
                             textureView: false,
                             onMapCreated: _onMapCreated,
+                            onMapLoadedListener: (value){
+                              if(long!= null && lat!=null) {
+                                mapboxMap?.annotations.createCircleAnnotationManager().then((value) {
+                                  circleAnnotationManager = value;
+                                  circleAnnotationManager?.create(
+                                    CircleAnnotationOptions(
+                                      geometry: Point(coordinates: Position(long!, lat!)),
+                                      circleColor: AppColors.primaryRed.value,
+                                      circleStrokeColor: Colors.white.value,
+                                      circleStrokeWidth: 2,
+                                      circleRadius: 8.0,
+                                    ),
+                                  );
+                                });
+                                setState(() {
+
+                                });
+                              }},
                           ): Container(color: Colors.grey,),
                         ),
                       ),
