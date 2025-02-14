@@ -1,6 +1,9 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import 'package:pear_app/res/images/app_images.dart';
+
+import '../theme/app_colors.dart';
 
 class ScheduleScreen extends StatefulWidget {
   const ScheduleScreen({Key? key}) : super(key: key);
@@ -10,8 +13,40 @@ class ScheduleScreen extends StatefulWidget {
 }
 
 class _ScheduleScreenState extends State<ScheduleScreen> {
-  double lat = 0;
-  double long = 0;
+
+
+  // tinhnn
+
+  MapboxMap? mapboxMap;
+  CircleAnnotationManager? circleAnnotationManager;
+
+  _onMapCreated(MapboxMap mapboxMap) {
+    this.mapboxMap = mapboxMap;
+  }
+
+  customMap(double long, double lat){
+      mapboxMap?.annotations.createCircleAnnotationManager().then((value) {
+        circleAnnotationManager = value;
+        circleAnnotationManager?.create(
+          CircleAnnotationOptions(
+            geometry: Point(coordinates: Position(long, lat)),
+            circleColor: AppColors.primaryRed.value,
+            circleStrokeColor: Colors.white.value,
+            circleStrokeWidth: 2,
+            circleRadius: 6.0,
+          ),
+        );
+        setState(() {
+
+        });
+      });
+  }
+
+
+
+
+  double? lat ;
+  double? long ;
   late final DatabaseReference _databaseReference;
   void _setDeviceState(String path, bool state) async {
     _databaseReference = FirebaseDatabase.instance.ref('/control').child(path);
@@ -44,6 +79,9 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
       });
     });
     //monitor
+       if(long!= null && lat!=null) {
+      customMap(long!,lat!);
+    }
   }
 
   @override
@@ -92,16 +130,26 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                   //  padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Column(
                     children: [
-                      const SizedBox(
-                        height: 24,
-                      ),
-                      Container(
+                      // const SizedBox(
+                      //   height: 24,
+                      // ),
+                      SizedBox(
                         height: MediaQuery.of(context).size.height / 3,
                         width: double.infinity,
-                        color: Colors.grey[200],
-                        child: Image.asset(
-                          AppImages.image13,
-                          fit: BoxFit.fill,
+                        child:ClipRRect(
+                          borderRadius:
+                          const BorderRadius.vertical(top: Radius.circular(20)),
+                          child: long!=null && lat!=null? MapWidget(
+                            key: const ValueKey("mapWidget"),
+                            cameraOptions: CameraOptions(
+                              center: Point(
+                                  coordinates: Position(long!,lat!)),
+                              zoom: 17,
+                            ),
+                            styleUri: MapboxStyles.MAPBOX_STREETS,
+                            textureView: false,
+                            onMapCreated: _onMapCreated,
+                          ): Container(color: Colors.grey,),
                         ),
                       ),
                       Expanded(
@@ -124,15 +172,20 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                                           color: Colors.red),
                                     ),
                                     const SizedBox(width: 16),
-                                    const Column(
+                                     Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Text(
-                                          'Điểm đến',
-                                          style: TextStyle(
-                                            color: Colors.grey,
-                                            fontSize: 16,
+                                        InkWell(
+                                          onTap: (){
+                                            print(lat);
+                                          },
+                                          child: Text(
+                                            'Điểm đến',
+                                            style: TextStyle(
+                                              color: Colors.grey,
+                                              fontSize: 16,
+                                            ),
                                           ),
                                         ),
                                         Text(

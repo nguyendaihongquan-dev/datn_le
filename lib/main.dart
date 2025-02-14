@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import 'package:pear_app/provider/loading_provider.dart';
 import 'package:pear_app/provider/login_provider.dart';
 import 'package:pear_app/provider/user_provider.dart';
-import 'package:pear_app/screens/forgot_password_screen.dart';
 import 'package:pear_app/screens/login_screen.dart';
-import 'package:pear_app/screens/test_screen.dart';
 import 'package:pear_app/widgets/key_board_dismiss.dart';
 import 'package:pear_app/widgets/loading_widget.dart';
 import 'package:provider/provider.dart';
@@ -15,6 +14,7 @@ import 'app/routes/app_routes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  MapboxOptions.setAccessToken("pk.eyJ1IjoicGV0ZXJ2dTEyMyIsImEiOiJjbHdzbzY1bngwOTdrMndvZWRha3Iyb29iIn0.8dif0JPZ1Q_PWM9m0QwaXQ");
   await Firebase.initializeApp();
   await initializeDateFormatting('vi', null);
   runApp(const MyApp());
